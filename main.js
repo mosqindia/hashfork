@@ -22,6 +22,131 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
 reveals.forEach(el => io.observe(el));
 
+// ── Feature slider ──
+const featureSlider = document.getElementById('featureSlider');
+const featureSliderNav = document.getElementById('featureSliderNav');
+
+if (featureSlider && featureSliderNav) {
+  const featureSlides = Array.from(featureSlider.querySelectorAll('.feature'));
+  let activeFeature = 0;
+  let scrollFrame = 0;
+  let dragging = false;
+  let dragStartX = 0;
+  let lastDragX = 0;
+  let dragStartFeature = 0;
+  let hasDragged = false;
+  let suppressClick = false;
+
+  const featureIndicators = featureSlides.map((slide, index) => {
+    slide.setAttribute('aria-label', `${index + 1} of ${featureSlides.length}`);
+    const indicator = document.createElement('button');
+    indicator.type = 'button';
+    indicator.className = 'feature-slider-indicator';
+    indicator.setAttribute('aria-label', `Go to feature ${index + 1}`);
+    indicator.addEventListener('click', () => {
+      const sliderRect = featureSlider.getBoundingClientRect();
+      const slideRect = slide.getBoundingClientRect();
+      featureSlider.scrollTo({
+        left: featureSlider.scrollLeft + slideRect.left - sliderRect.left,
+        behavior: 'smooth'
+      });
+    });
+    featureSliderNav.appendChild(indicator);
+    return indicator;
+  });
+
+  function updateActiveFeature() {
+    const sliderCenter = featureSlider.getBoundingClientRect().left + featureSlider.clientWidth / 2;
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+
+    featureSlides.forEach((slide, index) => {
+      const slideRect = slide.getBoundingClientRect();
+      const distance = Math.abs(slideRect.left + slideRect.width / 2 - sliderCenter);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    activeFeature = closestIndex;
+    featureIndicators.forEach((indicator, index) => {
+      indicator.setAttribute('aria-current', String(index === activeFeature));
+    });
+  }
+
+  featureSlider.addEventListener('scroll', () => {
+    if (scrollFrame) return;
+    scrollFrame = requestAnimationFrame(() => {
+      scrollFrame = 0;
+      updateActiveFeature();
+    });
+  }, { passive: true });
+
+  featureSlider.addEventListener('keydown', event => {
+    if (event.target !== featureSlider || (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')) return;
+    event.preventDefault();
+    const direction = event.key === 'ArrowRight' ? 1 : -1;
+    featureIndicators[Math.max(0, Math.min(activeFeature + direction, featureSlides.length - 1))].click();
+  });
+
+  featureSlider.addEventListener('pointerdown', event => {
+    if (event.pointerType !== 'mouse' || event.button !== 0 || event.target.closest('a, button, input, select, textarea')) return;
+    dragging = true;
+    dragStartX = event.clientX;
+    lastDragX = event.clientX;
+    dragStartFeature = activeFeature;
+    hasDragged = false;
+  });
+
+  window.addEventListener('pointermove', event => {
+    if (!dragging || event.pointerType !== 'mouse') return;
+    const distance = event.clientX - dragStartX;
+    if (!hasDragged && Math.abs(distance) > 3) {
+      hasDragged = true;
+      featureSlider.classList.add('is-dragging');
+    }
+    if (hasDragged) {
+      event.preventDefault();
+      featureSlider.scrollLeft -= (event.clientX - lastDragX) * 1.5;
+    }
+    lastDragX = event.clientX;
+  });
+
+  function endFeatureDrag() {
+    if (!dragging) return;
+    dragging = false;
+    if (hasDragged) {
+      suppressClick = true;
+      const dragDistance = dragStartX - lastDragX;
+      const swipeThreshold = Math.min(100, featureSlider.clientWidth * 0.12);
+      if (Math.abs(dragDistance) >= swipeThreshold) {
+        activeFeature = Math.max(
+          0,
+          Math.min(dragStartFeature + Math.sign(dragDistance), featureSlides.length - 1)
+        );
+      } else {
+        updateActiveFeature();
+      }
+      featureIndicators[activeFeature].click();
+      window.setTimeout(() => { suppressClick = false; }, 0);
+    }
+    featureSlider.classList.remove('is-dragging');
+  }
+
+  window.addEventListener('pointerup', endFeatureDrag);
+  window.addEventListener('pointercancel', endFeatureDrag);
+  featureSlider.addEventListener('click', event => {
+    if (!suppressClick) return;
+    event.preventDefault();
+    event.stopPropagation();
+    suppressClick = false;
+  }, true);
+  featureSlider.addEventListener('dragstart', event => event.preventDefault());
+  window.addEventListener('resize', updateActiveFeature);
+  updateActiveFeature();
+}
+
 // ── Counters ──
 document.querySelectorAll('.counter').forEach(el => {
   new IntersectionObserver(([e]) => {
@@ -170,4 +295,3 @@ function updateFaqToggleLabel() {
   allExpanded = openCount === faqItems.length;
   faqToggleAll.textContent = allExpanded ? 'Collapse All' : 'Expand All';
 }
-

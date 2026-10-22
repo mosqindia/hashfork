@@ -193,11 +193,11 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
 /* ── Shared ── */
 .section { padding: 120px 0; position: relative; }
 .section-tag {
-  font-size: 9px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase;
-  color: var(--slate-warm); opacity: 0.6; margin-bottom: 20px;
+  font-size: 15px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #ffffff; opacity: 1; margin-bottom: 20px;
 }
 .section-title {
-  font-size: clamp(2rem, 4vw, 3rem); font-weight: 300;
+  font-size: clamp(1.6rem, 4vw, 1.6rem); font-weight: 300;
   letter-spacing: -0.04em; line-height: 1.15; color: var(--ivory); margin-bottom: 20px;
 }
 .section-title strong { font-weight: 600; }
@@ -326,7 +326,7 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
   overflow: hidden; position: relative; z-index: 10;
 }
 .logo-ticker-label {
-  text-align: center; font-size: 15px; font-weight: 500; letter-spacing: 0.25em;
+  text-align: center; font-size: 16px; font-weight: 500; letter-spacing: 0.25em;
   text-transform: uppercase; color: #ffffff; opacity: 1; margin-bottom: 32px;
 }
 .ticker-track {
@@ -350,12 +350,35 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
 /* ══════════════════════════════════
    FEATURE SHOWCASE
    ══════════════════════════════════ */
+.feature-slider {
+  overflow-x: auto; overflow-y: hidden; scrollbar-width: none;
+  scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+  padding: 40px 0; margin: -40px 0;
+  cursor: grab;
+}
+.feature-slider::-webkit-scrollbar { display: none; }
+.feature-slider.is-dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+.feature-slider-track { display: flex; gap: 24px; }
 .feature {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
-  padding: 72px 0;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;
+  flex: 0 0 100%; min-width: 0; padding: 32px 2px; scroll-snap-align: start;
 }
 .feature.reverse { direction: rtl; }
 .feature.reverse > * { direction: ltr; }
+
+.feature-slider-nav {
+  display: flex; justify-content: center; gap: 8px; margin-top: 32px;
+}
+.feature-slider-indicator {
+  width: 48px; height: 4px; padding: 0; border: 0; border-radius: 4px;
+  background: rgba(156,163,175,0.2); cursor: pointer;
+  transition: background 0.4s var(--silk-ease), transform 0.4s var(--silk-ease);
+}
+.feature-slider-indicator[aria-current="true"] { background: #029cec; }
+.feature-slider-indicator:hover { transform: scaleY(1.75); }
+.feature-slider-indicator:focus-visible {
+  outline: 2px solid var(--silver); outline-offset: 4px;
+}
 
 .feature-visual {
   position: relative; height: 320px; border-radius: 32px; overflow: hidden;
@@ -366,7 +389,7 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
 }
 .feature-content {}
 .feature-number {
-  font-size: 3rem; font-weight: 200; letter-spacing: -0.04em;
+  font-size: 2rem; font-weight: 200; letter-spacing: -0.04em;
   color: rgba(176,184,196,0.08); line-height: 1; margin-bottom: 12px;
   font-variant-numeric: tabular-nums;
 }
@@ -643,13 +666,13 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
 
 @media (max-width: 768px) {
   .main { padding: 0 20px; }
-  .top-nav { padding: 18px 20px; }
+  .top-nav { padding: 30px 20px; }
   .top-nav.scrolled { padding: 14px 20px; }
   .hero { min-height: auto; padding: 120px 0 60px; }
   .hero-metrics { flex-direction: column; gap: 28px; }
   .hero-ctas { flex-direction: column; align-items: center; }
   .btn-primary, .btn-secondary { width: 100%; max-width: 280px; text-align: center; }
-  .section { padding: 80px 0; }
+  .section { padding: 60px 0; }
   .feature-visual { height: 240px; border-radius: 24px; }
   .pricing-card { padding: 32px 24px; border-radius: 28px; }
   .pricing-card.featured { padding-top: 52px; }
@@ -662,7 +685,7 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
 
 @media (max-width: 420px) {
   .hero h1 { font-size: 2.4rem; }
-  .section-title { font-size: 1.7rem; }
+  .section-title { font-size: 1.2rem; }
   .integrations-grid { grid-template-columns: repeat(2, 1fr); }
   .mobile-menu-link { font-size: 1.4rem; }
 }
