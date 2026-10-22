@@ -332,6 +332,8 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
 .ticker-track {
   display: flex; width: max-content;
   animation: tickerScroll 30s linear infinite;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 .ticker-track:not(.ticker-track-reverse) .ticker-item { color: #029cec; }
 .ticker-track-reverse { margin-top: 18px; animation-direction: reverse; }
@@ -345,7 +347,7 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
 .ticker-item:hover { opacity: 0.7; }
 .ticker-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--slate-warm); opacity: 0.2; margin: 0 40px; flex-shrink: 0; }
 
-@keyframes tickerScroll { to { transform: translateX(-50%); } }
+@keyframes tickerScroll { to { transform: translate3d(-50%, 0, 0); } }
 
 /* ══════════════════════════════════
    FEATURE SHOWCASE
@@ -668,7 +670,7 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
   .main { padding: 0 20px; }
   .top-nav { padding: 30px 20px; }
   .top-nav.scrolled { padding: 14px 20px; }
-  .hero { min-height: auto; padding: 120px 0 60px; }
+  .hero { min-height: auto; padding: 120px 0 40px; }
   .hero-metrics { flex-direction: column; gap: 28px; }
   .hero-ctas { flex-direction: column; align-items: center; }
   .btn-primary, .btn-secondary { width: 100%; max-width: 280px; text-align: center; }
