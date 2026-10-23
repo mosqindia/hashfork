@@ -322,7 +322,7 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
    LOGO TICKER
    ══════════════════════════════════ */
 .logo-ticker {
-  padding: 60px 0; border-top: 1px solid var(--panel-border); border-bottom: 1px solid var(--panel-border);
+  padding: 40px 0; border-top: 1px solid var(--panel-border); border-bottom: 1px solid var(--panel-border);
   overflow: hidden; position: relative; z-index: 10;
 }
 .logo-ticker-label {
@@ -340,7 +340,7 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
 .ticker-track:hover { animation-play-state: paused; }
 .ticker-item {
   flex-shrink: 0; padding: 0 40px; display: flex; align-items: center;
-  font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  font-size: 14px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
   color: #0bb0a1; opacity: 1.0;
   transition: opacity 0.6s var(--silk-ease);
 }
