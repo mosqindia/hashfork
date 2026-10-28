@@ -452,14 +452,14 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
   background: rgba(255,255,255,0.06); color: var(--slate-warm);
   text-align: center; font-size: 7px;
 }
-.product-desktop-frame .product-image-frame { aspect-ratio: 16 / 8; }
+.product-desktop-frame .product-image-frame { aspect-ratio: 16 / 0; }
 .product-mobile-frame {
   width: 100%; padding: 6px; border-radius: 27px;
   background: linear-gradient(145deg, #454b54, #171a20 25%, #0c0e12 80%, #3b4149);
   border: 1px solid rgba(176,184,196,0.36);
   box-shadow: 0 24px 60px rgba(0,0,0,0.44), 0 0 30px rgba(2,156,236,0.15);
 }
-.product-mobile-frame .product-image-frame { aspect-ratio: 9 / 18; border-radius: 21px; }
+.product-mobile-frame .product-image-frame { aspect-ratio: 0 / 18; border-radius: 21px; }
 .product-image-frame {
   position: relative; width: 100%; overflow: hidden;
   background: radial-gradient(ellipse at 50% 0%, rgba(2,156,236,0.12), transparent 55%), #0d1015;
