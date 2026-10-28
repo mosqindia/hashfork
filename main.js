@@ -215,13 +215,14 @@ if (productCarousel) {
     }
   });
 
-  productStage.addEventListener('pointerdown', event => {
+  productCarousel.addEventListener('pointerdown', event => {
+    if (event.target.closest('.product-controls, button, a, input, select, textarea')) return;
     if (event.button !== undefined && event.button !== 0) return;
     pointerStart = { x: event.clientX, y: event.clientY };
-    productStage.setPointerCapture(event.pointerId);
+    productCarousel.setPointerCapture(event.pointerId);
   });
 
-  productStage.addEventListener('pointerup', event => {
+  productCarousel.addEventListener('pointerup', event => {
     if (!pointerStart) return;
     const deltaX = event.clientX - pointerStart.x;
     const deltaY = event.clientY - pointerStart.y;
@@ -230,7 +231,7 @@ if (productCarousel) {
     showProduct(activeProduct + (deltaX < 0 ? 1 : -1));
   });
 
-  productStage.addEventListener('pointercancel', () => { pointerStart = null; });
+  productCarousel.addEventListener('pointercancel', () => { pointerStart = null; });
   showProduct(activeProduct);
 }
 
