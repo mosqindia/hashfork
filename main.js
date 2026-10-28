@@ -147,6 +147,93 @@ if (featureSlider && featureSliderNav) {
   updateActiveFeature();
 }
 
+// ── Products carousel ──
+const productCarousel = document.getElementById('productCarousel');
+
+if (productCarousel) {
+  const productStage = document.getElementById('productStage');
+  const productSlides = Array.from(productStage.querySelectorAll('.product-device'));
+  const productIndicators = document.getElementById('productIndicators');
+  const productCategory = document.getElementById('productCategory');
+  const productTitle = document.getElementById('productTitle');
+  const productDescription = document.getElementById('productDescription');
+  const productPrev = document.getElementById('productPrev');
+  const productNext = document.getElementById('productNext');
+  let activeProduct = 0;
+  let pointerStart = null;
+
+  productStage.querySelectorAll('.product-preview-image').forEach(image => {
+    const imageFrame = image.closest('.product-image-frame');
+    const updateImageState = () => {
+      imageFrame.classList.toggle('has-image', image.complete && image.naturalWidth > 0);
+    };
+    image.addEventListener('load', updateImageState);
+    image.addEventListener('error', () => imageFrame.classList.remove('has-image'));
+    if (image.complete) updateImageState();
+  });
+
+  const productButtons = productSlides.map((slide, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'product-indicator';
+    button.setAttribute('aria-label', `Show ${slide.dataset.title}`);
+    button.addEventListener('click', () => showProduct(index));
+    productIndicators.appendChild(button);
+    return button;
+  });
+
+  function showProduct(index) {
+    activeProduct = (index + productSlides.length) % productSlides.length;
+    const activeSlide = productSlides[activeProduct];
+    productSlides.forEach((slide, slideIndex) => {
+      const position = (slideIndex - activeProduct + productSlides.length) % productSlides.length;
+      slide.classList.toggle('is-active', position === 0);
+      slide.classList.toggle('is-next', position === 1);
+      slide.classList.toggle('is-prev', position === productSlides.length - 1);
+      slide.setAttribute('aria-hidden', String(position !== 0));
+    });
+
+    productButtons.forEach((button, buttonIndex) => {
+      button.setAttribute('aria-current', String(buttonIndex === activeProduct));
+    });
+    productCategory.textContent = activeSlide.dataset.category;
+    productTitle.textContent = activeSlide.dataset.title;
+    productDescription.textContent = activeSlide.dataset.description;
+  }
+
+  productPrev.addEventListener('click', () => showProduct(activeProduct - 1));
+  productNext.addEventListener('click', () => showProduct(activeProduct + 1));
+
+  productCarousel.addEventListener('keydown', event => {
+    if (event.target.closest('button')) return;
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      showProduct(activeProduct - 1);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      showProduct(activeProduct + 1);
+    }
+  });
+
+  productStage.addEventListener('pointerdown', event => {
+    if (event.button !== undefined && event.button !== 0) return;
+    pointerStart = { x: event.clientX, y: event.clientY };
+    productStage.setPointerCapture(event.pointerId);
+  });
+
+  productStage.addEventListener('pointerup', event => {
+    if (!pointerStart) return;
+    const deltaX = event.clientX - pointerStart.x;
+    const deltaY = event.clientY - pointerStart.y;
+    pointerStart = null;
+    if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) return;
+    showProduct(activeProduct + (deltaX < 0 ? 1 : -1));
+  });
+
+  productStage.addEventListener('pointercancel', () => { pointerStart = null; });
+  showProduct(activeProduct);
+}
+
 // ── Counters ──
 document.querySelectorAll('.counter').forEach(el => {
   new IntersectionObserver(([e]) => {
