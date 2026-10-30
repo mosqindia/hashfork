@@ -194,7 +194,7 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
 .section { padding: 120px 0; position: relative; }
 .section-tag {
   font-size: 16px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase;
-  color: #ffffff; opacity: 1; margin-bottom: 20px;
+  color: #ffffff; opacity: 1; margin-bottom: 0px;
 }
 .section-title {
   font-size: clamp(1.6rem, 4vw, 1.6rem); font-weight: 300;
@@ -403,7 +403,7 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
 .product-carousel { max-width: 1040px; margin: 5px auto 0; }
 .product-stage {
   --product-offset: clamp(340px, 34vw, 420px);
-  height: 440px; position: relative; perspective: 1200px;
+  height: 390px; position: relative; perspective: 1200px;
   transform-style: preserve-3d; overflow: hidden; touch-action: pan-y;
 }
 .product-device {
@@ -823,7 +823,7 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
   .footer-links { flex-wrap: wrap; justify-content: center; }
   .footer-ctas { flex-direction: column; align-items: center; }
   .mobile-menu-inner { padding: 90px 20px 40px; }
-  .product-carousel { margin-top: 40px; }
+  .product-carousel { margin-top: 0px; }
   .product-stage { --product-offset: clamp(118px, 34vw, 145px); height: 390px; }
   .product-device { top: 12px; width: 100%; height: 360px; }
   .product-details { min-height: 145px; }
@@ -843,7 +843,7 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
   .product-desktop-frame { padding: 5px; border-radius: 10px; }
   .product-window-bar { height: 16px; padding-bottom: 4px; }
   .product-preview-label { font-size: 7px; }
-  .product-carousel { margin-top: 32px; }
+  .product-carousel { margin-top: 0px; }
 }
 
 @media (max-height: 540px) and (orientation: landscape) {
