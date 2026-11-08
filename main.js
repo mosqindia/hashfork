@@ -159,8 +159,19 @@ if (productCarousel) {
   const productDescription = document.getElementById('productDescription');
   const productPrev = document.getElementById('productPrev');
   const productNext = document.getElementById('productNext');
+  const productLightbox = document.getElementById('productLightbox');
+  const productLightboxImage = document.getElementById('productLightboxImage');
+  const productLightboxViewport = document.getElementById('productLightboxViewport');
+  const productLightboxZoomOut = document.getElementById('productLightboxZoomOut');
+  const productLightboxZoomReset = document.getElementById('productLightboxZoomReset');
+  const productLightboxZoomIn = document.getElementById('productLightboxZoomIn');
+  const productLightboxClose = document.getElementById('productLightboxClose');
   let activeProduct = 0;
   let pointerStart = null;
+  let suppressImageClick = false;
+  let lightboxZoom = 1;
+  let lightboxFitScale = 1;
+  let lightboxReturnFocus = null;
 
   productStage.querySelectorAll('.product-preview-image').forEach(image => {
     const imageFrame = image.closest('.product-image-frame');
@@ -170,6 +181,76 @@ if (productCarousel) {
     image.addEventListener('load', updateImageState);
     image.addEventListener('error', () => imageFrame.classList.remove('has-image'));
     if (image.complete) updateImageState();
+    image.setAttribute('role', 'button');
+    image.tabIndex = 0;
+    image.setAttribute('aria-haspopup', 'dialog');
+    image.setAttribute('aria-label', `View ${image.alt} enlarged`);
+  });
+
+  function updateLightboxZoom() {
+    if (!productLightboxImage.naturalWidth) return;
+    const maxWidth = productLightboxViewport.clientWidth;
+    const maxHeight = productLightboxViewport.clientHeight;
+    lightboxFitScale = Math.min(maxWidth / productLightboxImage.naturalWidth, maxHeight / productLightboxImage.naturalHeight, 1);
+    productLightboxImage.style.width = `${productLightboxImage.naturalWidth * lightboxFitScale * lightboxZoom}px`;
+    productLightboxImage.style.height = `${productLightboxImage.naturalHeight * lightboxFitScale * lightboxZoom}px`;
+    productLightboxZoomReset.textContent = `${Math.round(lightboxZoom * 100)}%`;
+  }
+
+  productLightboxImage.addEventListener('load', updateLightboxZoom);
+
+  function openProductImage(image) {
+    if (!image.complete || image.naturalWidth === 0) return;
+    lightboxReturnFocus = image;
+    lightboxZoom = 1;
+    productLightboxImage.src = image.currentSrc || image.src;
+    productLightboxImage.alt = image.alt;
+    productLightbox.showModal();
+    if (productLightboxImage.complete) updateLightboxZoom();
+    productLightboxClose.focus();
+  }
+
+  productCarousel.addEventListener('click', event => {
+    const image = event.target.closest('.product-preview-image');
+    if (suppressImageClick) {
+      event.preventDefault();
+      event.stopPropagation();
+      suppressImageClick = false;
+      return;
+    }
+    if (image) openProductImage(image);
+  });
+
+  productCarousel.addEventListener('keydown', event => {
+    const image = event.target.closest('.product-preview-image');
+    if (!image || (event.key !== 'Enter' && event.key !== ' ')) return;
+    event.preventDefault();
+    openProductImage(image);
+  });
+
+  productLightboxZoomIn.addEventListener('click', () => {
+    lightboxZoom = Math.min(lightboxZoom + 0.25, 4);
+    updateLightboxZoom();
+  });
+  productLightboxZoomOut.addEventListener('click', () => {
+    lightboxZoom = Math.max(lightboxZoom - 0.25, 0.5);
+    updateLightboxZoom();
+  });
+  productLightboxZoomReset.addEventListener('click', () => {
+    lightboxZoom = 1;
+    updateLightboxZoom();
+    productLightboxViewport.scrollTo({ top: 0, left: 0 });
+  });
+  productLightboxClose.addEventListener('click', () => productLightbox.close());
+  productLightbox.addEventListener('click', event => {
+    if (event.target === productLightbox) productLightbox.close();
+  });
+  productLightbox.addEventListener('close', () => {
+    productLightboxImage.removeAttribute('src');
+    if (lightboxReturnFocus?.isConnected) lightboxReturnFocus.focus();
+  });
+  window.addEventListener('resize', () => {
+    if (productLightbox.open && productLightboxImage.naturalWidth) updateLightboxZoom();
   });
 
   const productButtons = productSlides.map((slide, index) => {
@@ -228,6 +309,8 @@ if (productCarousel) {
     const deltaY = event.clientY - pointerStart.y;
     pointerStart = null;
     if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) return;
+    suppressImageClick = true;
+    window.setTimeout(() => { suppressImageClick = false; }, 0);
     showProduct(activeProduct + (deltaX < 0 ? 1 : -1));
   });
 

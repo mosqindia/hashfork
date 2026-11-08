@@ -496,6 +496,38 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
 .product-indicator[aria-current="true"] { width: 46px; background: #029cec; }
 .product-arrow:focus-visible, .product-indicator:focus-visible { outline: 2px solid var(--silver); outline-offset: 4px; }
 
+.product-preview-image[role="button"] { cursor: zoom-in; }
+.product-preview-image[role="button"]:focus-visible { outline: 2px solid #029cec; outline-offset: -2px; }
+.product-lightbox {
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+  margin: 0; padding: 64px 20px 24px; border: 0; overflow: hidden;
+  place-items: center; background: transparent; color: var(--ivory);
+}
+.product-lightbox[open] { display: grid; }
+.product-lightbox::backdrop { background: rgba(5, 8, 12, 0.82); backdrop-filter: blur(8px); }
+.product-lightbox-toolbar {
+  position: absolute; z-index: 1; top: 18px; right: 22px; left: 22px;
+  display: flex; justify-content: space-between; align-items: center; pointer-events: none;
+}
+.product-lightbox-zoom-controls { display: flex; align-items: center; gap: 8px; }
+.product-lightbox-button {
+  width: 42px; height: 42px; display: grid; place-items: center; padding: 0;
+  border: 1px solid rgba(255,255,255,0.22); border-radius: 50%;
+  background: rgba(15,18,24,0.72); color: var(--ivory); cursor: pointer;
+  font: inherit; font-size: 22px; line-height: 1; pointer-events: auto;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.product-lightbox-button:hover { border-color: rgba(2,156,236,0.65); background: rgba(2,156,236,0.2); }
+.product-lightbox-button:focus-visible { outline: 2px solid #029cec; outline-offset: 3px; }
+.product-lightbox-zoom-level { width: 58px; border-radius: 22px; font-size: 12px; }
+.product-lightbox-close svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.product-lightbox-viewport {
+  width: min(94vw, 1400px); height: min(84vh, 900px); overflow: auto;
+  display: flex; align-items: center; justify-content: center;
+  overscroll-behavior: contain;
+}
+.product-lightbox-image { display: block; flex: none; max-width: none; max-height: none; margin: auto; object-fit: contain; }
+
 /* ══════════════════════════════════
    PRICING
    ══════════════════════════════════ */
@@ -844,6 +876,11 @@ body.menu-open .top-nav { background: rgba(15,17,21,0.95); backdrop-filter: blur
   .product-window-bar { height: 16px; padding-bottom: 4px; }
   .product-preview-label { font-size: 7px; }
   .product-carousel { margin-top: 0px; }
+  .product-lightbox { padding: 66px 10px 16px; }
+  .product-lightbox-toolbar { top: 12px; right: 12px; left: 12px; }
+  .product-lightbox-button { width: 38px; height: 38px; }
+  .product-lightbox-zoom-level { width: 54px; }
+  .product-lightbox-viewport { width: 96vw; height: 82vh; }
 }
 
 @media (max-height: 540px) and (orientation: landscape) {

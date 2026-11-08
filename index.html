@@ -442,6 +442,22 @@
         </button>
       </div>
     </div>
+
+    <dialog class="product-lightbox" id="productLightbox" aria-label="Product image preview">
+      <div class="product-lightbox-toolbar">
+        <div class="product-lightbox-zoom-controls" aria-label="Image zoom controls">
+          <button class="product-lightbox-button" id="productLightboxZoomOut" type="button" aria-label="Zoom out">−</button>
+          <button class="product-lightbox-button product-lightbox-zoom-level" id="productLightboxZoomReset" type="button" aria-label="Reset zoom">100%</button>
+          <button class="product-lightbox-button" id="productLightboxZoomIn" type="button" aria-label="Zoom in">+</button>
+        </div>
+        <button class="product-lightbox-button product-lightbox-close" id="productLightboxClose" type="button" aria-label="Close image preview">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="product-lightbox-viewport" id="productLightboxViewport">
+        <img class="product-lightbox-image" id="productLightboxImage" alt="">
+      </div>
+    </dialog>
   </section>
 
   <div class="silk-divider reveal"></div>
